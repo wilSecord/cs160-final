@@ -29,6 +29,7 @@ However, much of our work will (and should!) be extended to other states.
 - Analysis of other states
 - Degrees of collaboration, in order to more accurately determine influence (e.g. discriminating between 'one-off' collaborations and frequent collaborations) 
 - Public availability of interactive visualizer 
+- Analysis of [ListenBrainz](https://listenbrainz.org/) database for musical similarity of inspired artists  
 
 ## Expected Timeline
 
