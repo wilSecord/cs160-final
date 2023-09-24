@@ -10,11 +10,11 @@ In this project, we have decided to work on this issue because of a shared love 
 
 We have elected to work specifically on the issue of connection to U.S. states because it is an unambiguous geographical separation, which is often extended to a cultural separation[^3]. Although states may share cultures with their neighbors, regions are ill-defined and too coarse-grained, while states are more precise. 
 
-In this project, we will specifically be focusing on New Jersey for several reasons:
+In this project, we will be using New Jersey as an example for several reasons:
 - Lack of recognized musical industry/style (unlike California[^4], NYC[^4], Chicago[^5], etc)
 - Lack of association with a specific genre (unlike Nashville, Texas, etc)
 - Large amount of artists[^4]
-- Geographic proximity to New York
+- Geographic proximity to New York with distinct culture
 
 However, much of our work will (and should!) be extended to other states.
 
