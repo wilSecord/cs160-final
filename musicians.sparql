@@ -1,0 +1,18 @@
+#Number of notable musicians per U.S. state
+SELECT ?artist ?artistLabel ?stateLabel WHERE {
+    #An artist, producer, or other musical profession
+    {?artist wdt:P106 [ wdt:P279? wd:Q639669 ].}  
+    UNION
+    #A musical group
+    {?artist wdt:P31 wd:Q215380.} 
+  
+    #Only artists/groups from the U.S.
+    ?artist (wdt:P495|wdt:P27) wd:Q30.
+    ?artist (wdt:P19|wdt:P740) ?hometown.
+
+    # Get the state their hometown is in
+    ?hometown (wdt:P131+) ?state.
+    ?state wdt:P131 ?country;
+        wdt:P17 ?country.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
