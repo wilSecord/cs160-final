@@ -14,7 +14,7 @@ In this project, we will specifically be focusing on New Jersey for several reas
 - Lack of recognized musical industry/style (unlike California[^4], NYC[^4], Chicago[^5], etc)
 - Lack of association with a specific genre (unlike Nashville, Texas, etc)
 - Large amount of artists[^4]
-- Geographic proximity to New York ()
+- Geographic proximity to New York
 
 However, much of our work will (and should!) be extended to other states.
 
