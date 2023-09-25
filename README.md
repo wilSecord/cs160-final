@@ -1,6 +1,6 @@
 # U.S. States' Degree of Influence on Musical Artists
 
-In this project, we will examine the degree of connection between musical artists and certain U.S. states, specifically targeting New Jersey as an exemplar case, but producing work that can be easily expanded to other states. 
+In this project, we will examine the degree of connection between musical artists and U.S. states in order to see which states have the greatest connection.
 
 ## Problem Statement 
 
@@ -8,25 +8,27 @@ Besides the intrinsic cultural value of art, artistic pursuits are incredibly ec
 
 In this project, we have decided to work on this issue because of a shared love of music and a common interest in large data. In addition, the public availability of data on musical artists and releases is a draw, as databases such as [MusicBrainz](https://musicbrainz.org/) are of a size that we can conceivably process, but still large enough to yield interesting conclusions. 
 
-We have elected to work specifically on the issue of connection to U.S. states because it is an unambiguous geographical separation, which is often extended to a cultural separation[^3]. Although states may share cultures with their neighbors, regions are ill-defined and too coarse-grained, while states are more precise. 
+We have elected to work specifically on the issue of connection to U.S. states because it is an unambiguous geographical separation, which is often extended to a cultural separation[^3]. Although states may share cultures with their neighbors, regions are ill-defined and too coarse-grained, while states are more precise.
 
-In this project, we will specifically be focusing on New Jersey for several reasons:
-- Lack of recognized musical industry/style (unlike California[^4], NYC[^4], Chicago[^5], etc)
-- Lack of association with a specific genre (unlike Nashville, Texas, etc)
-- Large amount of artists[^4]
-- Geographic proximity to New York
+### Our Project 
 
-However, much of our work will (and should!) be extended to other states.
+In a way similar to the Erdos number[^6] or the Bacon number[^7], we will count the separation between each state and each artist. An artist has a separation of 0 degrees from the state of their hometown, having grown up immersed in that state's culture. This forms the base case of our degree of separation. 
+
+In making this dataset, we hope to see the overall degree of connection from the music industry to each state.
+
+**Note:** An artist who grew up in a state will **not** contribute to that state's connection. We are not attempting to determine the *connection*, *collaboration*, and *influence* of a state's culture; we are not determining the relative *artistic gifts* of their population.
 
 ### Itemized Goals
 
 - A graph database describing collaborations between all musical artists
-- A method to tell the "degree of separation" between a given artist and New Jersey 
-- An interactive visualizer for how closely a given artist is related to New Jersey 
+- A method to tell the "degree of separation" between a given artist and a given state 
+- A set of shortest paths from each artist to each state 
+- An interactive visualizer for our results  
 
 ### Stretch Goals 
 
-- Analysis of other states
+- Analysis of artists from other countries 
+- Incorporation of genre, style, age, etc. in data analysis 
 - Degrees of collaboration, in order to more accurately determine influence (e.g. discriminating between 'one-off' collaborations and frequent collaborations) 
 - Public availability of interactive visualizer 
 - Analysis of [ListenBrainz](https://listenbrainz.org/) database for musical similarity of inspired artists  
@@ -85,3 +87,5 @@ Interactive service covering collaboration with focus on derivative works
 [^3]: https://psycnet.apa.org/record/2010-17989-002
 [^4]: Wikidata - SPARQL query, "number of notable musicians per U.S. state"; see [`musicians.spaqrl`](./musicians.sparql) for source
 [^5]: https://web.archive.org/web/20080513152119/http://members.socket.net/~dcowsley/jazzstyles.htm
+[^6]: https://sites.google.com/oakland.edu/grossman/home/the-erdoes-number-project
+[^7]: https://archive.org/details/sixdegreesofkevi00fass
