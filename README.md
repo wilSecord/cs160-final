@@ -28,7 +28,7 @@ In making this dataset, we hope to see the overall degree of connection from the
 
 ### Itemized Goals
 
-- A graph database describing collaborations between all musical artists
+- A graph database (e.g. Blazegraph) describing collaborations between all musical artists
 - A method to tell the "degree of separation" between a given artist and a given state 
 - A set of shortest paths from each artist to each state 
 - An interactive visualizer for our results  
@@ -45,10 +45,19 @@ In making this dataset, we hope to see the overall degree of connection from the
 
 ### Midterm 
 
+- **Graph database representing collaborations**
+- Begin work on shortest-path representation 
+- Begin work on interactive visualizer of experimental subset of the data 
+
 ### Final 
+
+- Full set of shortest paths 
+- Finished interactive visualizer 
 
 ## Potential Challenges 
 
+- Dataset size: we may anticipate difficulties in loading and transforming the complete dataset, and then visualizing our data interactively 
+- Runtime: the complete creation of our graph database may take a prohibitive amount of time 
 - 
 
 ## Related Work 
@@ -65,19 +74,23 @@ Conversion of the MusicBrainz database schema into graph database format. This d
 
 > Jacobson, Kurt, Simon Dixon, and Mark Sandler. "LinkedBrainz: Providing the MusicBrainz next generation schema as linked data." _Late-Breaking Demo Session at the 11th International Society for Music Information Retrieval Conference_. 2010. Accessed 24 Sept. 2023.
 
-Music collaboration investigation, linked to graph theory
+Music collaboration investigation, linked to graph theory. This talks about why musical collaborations are often popular and about social graphs in fanhood, but doesn't analyze any data about collaborations themselves.
 
 > _Graph Theory in Music Artist Collaborations : Networks Course Blog for INFO 2040/CS 2850/Econ 2040/SOC 2090_. blogs.cornell.edu/info2040/2022/09/21/graph-theory-in-music-artist-collaborations/. Accessed 24 Sept. 2023.
 
-Interactive service covering collaboration with focus on derivative works
+Interactive service covering collaboration with focus on derivative works. Unlike our project, this focuses on a video-sharing service rather than published music.
 
 > Hamasaki, Masahiro, and Masataka Goto. "Songrium: A music browsing assistance service based on visualization of massive open collaboration within music content creation community." _Proceedings of the 9th International Symposium on open collaboration_. 2013.
 
 
->
+Investigation of connection in another network (the Web). The findings here make us confident that our data will be connected enough to yield interesting results.
 
+> Stromberg, Joseph. “Any Two Pages on the Web Are Connected by 19 Clicks or Less.” _Smithsonian Magazine_, www.smithsonianmag.com/science-nature/any-two-pages-on-the-web-are-connected-by-19-clicks-or-less-19517004/. Accessed 25 Sept. 2023.
 
->
+Investigation of search for a specific endpoint in social connection. This is an investigation of a graph which *cannot* be completely known (the global social graph), while we are investigating a well-defined and mostly known graph (musical collaborations). However, we will cover similar topics (degree and method of connection to specifically chosen nodes)
+
+> Dodds, Peter Sheridan, et al. “An Experimental Study of Search in Global Social Networks.” _Science_, vol. 301, no. 5634, 8 Aug. 2003, pp. 827–829, https://doi.org/10.1126/science.1081058.
+
 
 
 >
