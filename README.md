@@ -10,15 +10,7 @@ In this project, we have decided to work on this issue because of a shared love 
 
 We have elected to work specifically on the issue of connection to U.S. states because it is an unambiguous geographical separation, which is often extended to a cultural separation[^3]. Although states may share cultures with their neighbors, regions are ill-defined and too coarse-grained, while states are more precise.
 
-<<<<<<< HEAD
 ### Our Project 
-=======
-In this project, we will be using New Jersey as an example for several reasons:
-- Lack of recognized musical industry/style (unlike California[^4], NYC[^4], Chicago[^5], etc)
-- Lack of association with a specific genre (unlike Nashville, Texas, etc)
-- Large amount of artists[^4]
-- Geographic proximity to New York with distinct culture
->>>>>>> 2dcb70f (Note distinct culture)
 
 In a way similar to the Erdos number[^6] or the Bacon number[^7], we will count the separation between each state and each artist. An artist has a separation of 0 degrees from the state of their hometown, having grown up immersed in that state's culture. This forms the base case of our degree of separation. 
 
