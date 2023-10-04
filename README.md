@@ -20,7 +20,6 @@ In making this dataset, we hope to see the overall degree of connection from the
 
 ### Itemized Goals
 
-- A graph database (e.g. Blazegraph) describing collaborations between all musical artists
 - A method to tell the "degree of separation" between a given artist and a given state 
 - A set of shortest paths from each artist to each state 
 - An interactive visualizer for our results  
@@ -50,7 +49,6 @@ In making this dataset, we hope to see the overall degree of connection from the
 
 - Dataset size: we may anticipate difficulties in loading and transforming the complete dataset, and then visualizing our data interactively 
 - Runtime: the complete creation of our graph database may take a prohibitive amount of time 
-- 
 
 ## Related Work 
 
@@ -83,15 +81,17 @@ Investigation of search for a specific endpoint in social connection. This is an
 
 > Dodds, Peter Sheridan, et al. “An Experimental Study of Search in Global Social Networks.” _Science_, vol. 301, no. 5634, 8 Aug. 2003, pp. 827–829, https://doi.org/10.1126/science.1081058.
 
+Investigation of collaboration in the music industry. This considers a subset of albums from authoritative 'greatest albums' lists, not a wide-ranging database. This also lacks our geographic/cultural component, but is a good look at a smaller scale of what we aim to do.
 
+> Budner, Pascal, and Joern Grahl. “Collaboration Networks in the Music Industry.” ArXiv:1611.00377 [Physics], 1 Nov. 2016, arxiv.org/abs/1611.00377.
 
->
+This is an investigation of wide-ranging collaboration in the music industry. This is global, while our project will be only focusing on the U.S, but we can use some of the same measures as sources to inform our data analysis.
 
+> Topirceanu, Alexandru, et al. “MuSeNet: Collaboration in the Music Artists Industry.” Ieeexplore.ieee.org, ieeexplore.ieee.org/abstract/document/6984896/authors#authors. Accessed 4 Oct. 2023.
 
->
+This contains an investigation into collaboration networks in two specific genres, while ours is an investigation into music artists in general. This also uses Discogs as a data source, while we will use MusicBrainz. However, we can use their approach to inform ours in analysis.
 
-
->
+> Gienapp, Lukas, et al. "Topological properties of music collaboration networks: The case of Jazz and Hip Hop." _Digital Humanities Quarterly_, 2021, Vol. 15 Issue 1, pN.PAG-N.PAG. 1p
 
 
 
