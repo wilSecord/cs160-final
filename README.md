@@ -66,7 +66,7 @@ Conversion of the MusicBrainz database schema into graph database format. This d
 
 Music collaboration investigation, linked to graph theory. This talks about why musical collaborations are often popular and about social graphs in fanhood, but doesn't analyze any data about collaborations themselves.
 
-> _Graph Theory in Music Artist Collaborations : Networks Course Blog for INFO 2040/CS 2850/Econ 2040/SOC 2090_. blogs.cornell.edu/info2040/2022/09/21/graph-theory-in-music-artist-collaborations/. Accessed 24 Sept. 2023.
+> Xu, Ruqing.  "Graph Theory in Music Artist Collaborations." _Networks Course Blog for INFO 2040/CS 2850/Econ 2040/SOC 2090_. blogs.cornell.edu/info2040/2022/09/21/graph-theory-in-music-artist-collaborations/. Accessed 24 Sept. 2023.
 
 Interactive service covering collaboration with focus on derivative works. Unlike our project, this focuses on a video-sharing service rather than published music.
 
@@ -87,7 +87,7 @@ Investigation of collaboration in the music industry. This considers a subset of
 
 This is an investigation of wide-ranging collaboration in the music industry. This is global, while our project will be only focusing on the U.S, but we can use some of the same measures as sources to inform our data analysis.
 
-> Topirceanu, Alexandru, et al. “MuSeNet: Collaboration in the Music Artists Industry.” Ieeexplore.ieee.org, ieeexplore.ieee.org/abstract/document/6984896/authors#authors. Accessed 4 Oct. 2023.
+> Topirceanu, Alexandru, et al. “MuSeNet: Collaboration in the Music Artists Industry.” IEEE Xplore, ieeexplore.ieee.org/abstract/document/6984896/authors#authors. Accessed 4 Oct. 2023.
 
 This contains an investigation into collaboration networks in two specific genres, while ours is an investigation into music artists in general. This also uses Discogs as a data source, while we will use MusicBrainz. However, we can use their approach to inform ours in analysis.
 
