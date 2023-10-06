@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+  submit_to_canvas:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: chlohal/gh-canvas@master
+        with:
+          canvas_base_url: "https://canvas.clarku.edu"
+          canvas_token: ${{ secrets.CANVAS_TOKEN }}
