@@ -1,3 +1,10 @@
+---
+
+Assignment Name: Algorithms F23 Final Project  
+Group Members: Wil Secord, Chloe Halverson, Will Titus  
+Repository: https://github.com/wilSecord/cs160-final  
+
+---
 # U.S. States' Degree of Influence on Musical Artists
 
 In this project, we will examine the degree of connection between musical artists and U.S. states in order to see which states have the greatest connection.
