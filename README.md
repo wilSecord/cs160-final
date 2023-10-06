@@ -20,9 +20,11 @@ In making this dataset, we hope to see the overall degree of connection from the
 
 ### Itemized Goals
 
-- A method to tell the "degree of separation" between a given artist and a given state 
-- A set of shortest paths from each artist to each state 
-- An interactive visualizer for our results  
+- A method to tell the "degree of separation" between a given artist and a given state
+- Analysis of the graph formed by the degrees of separation and connection
+  - Specifically, shortest-path; graph connectedness; etc
+  - However, we will attempt to implement multiple algorithms in order to gain an accurate view of the music industry's overall connection
+- An interactive visualizer for our results
 
 ### Stretch Goals 
 
@@ -30,19 +32,19 @@ In making this dataset, we hope to see the overall degree of connection from the
 - Incorporation of genre, style, age, etc. in data analysis 
 - Degrees of collaboration, in order to more accurately determine influence (e.g. discriminating between 'one-off' collaborations and frequent collaborations) 
 - Public availability of interactive visualizer 
-- Analysis of [ListenBrainz](https://listenbrainz.org/) database for musical similarity of inspired artists  
+- Analysis of [ListenBrainz](https://listenbrainz.org/) database for musical similarity of inspired artists
 
 ## Expected Timeline
 
 ### Midterm 
 
-- **Graph database representing collaborations**
-- Begin work on shortest-path representation 
+- **Graph representation of collaborations**
+- Begin work on analysis of graph representation 
 - Begin work on interactive visualizer of experimental subset of the data 
 
 ### Final 
 
-- Full set of shortest paths 
+- Full analysis results
 - Finished interactive visualizer 
 
 ## Potential Challenges 
