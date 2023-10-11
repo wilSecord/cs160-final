@@ -1,10 +1,21 @@
 import psycopg2
+import json
 
 
-def test(cur):
-    cur.execute("SELECT * FROM gender")
-    print(cur.fetchone())
-with open('data.txt', 'r') as f:
+def grab_data(cur):
+    cur.execute("SELECT name, area FROM artist WHERE area BETWEEN 262 AND 311")
+    artist_area = cur.fetchall()
+
+    artist_area_name = []
+    for item in artist_area:
+        cur.execute("SELECT name FROM area WHERE id = %s", (item[1],))
+        area_name = cur.fetchone()
+        artist_area_name.append((item[0], area_name))
+    with open('../data.json', 'w+') as f:
+        json.dump(artist_area_name, f)
+
+
+with open('../data.txt', 'r') as f:
     data = [item.rstrip() for item in f.readlines()]
 
 
@@ -16,3 +27,4 @@ conn = psycopg2.connect(
         password=data[4])
 
 cur = conn.cursor()
+grab_data(cur)
