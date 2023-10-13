@@ -17,10 +17,13 @@ BEGIN
             -- if the parent is the U.S. (222) then yield the area itself, which is defined to be a state
             return area_id; 
         else
+            -- otherwise, recurse upwards
             return find_us_state_of_area(parent_id);
         end if;
     end loop;
-
+    
+    -- if we didn't return earlier (i.e. if there was no parent ID), 
+    -- return 0. This is the negative base case.
     return 0;
 end;
 $$ LANGUAGE plpgsql;
