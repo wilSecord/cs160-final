@@ -1,3 +1,6 @@
+\o artist_states.csv
+\set ECHO_HIDDEN 'off'
+\set ECHO 'none'
 \set ON_ERROR_STOP 1
 BEGIN;
 
