@@ -1,7 +1,7 @@
 ---
 
 Assignment Name: Algorithms F23 Final Project  
-Group Members: Wil Secord, Chloe Halverson, Will Titus  
+Group Members: Wil Secord, Chloe Halverson, Will Titus, Theo King
 Repository: https://github.com/wilSecord/cs160-final  
 
 ---
@@ -19,19 +19,35 @@ We have elected to work specifically on the issue of connection to U.S. states b
 
 ### Our Project 
 
-In a way similar to the Erdos number[^6] or the Bacon number[^7], we will count the separation between each state and each artist. An artist has a separation of 0 degrees from the state of their hometown, having grown up immersed in that state's culture. This forms the base case of our degree of separation. 
+In a way similar to the Erdos number[^4] or the Bacon number[^5], we will find the degree of separation between each state and each artist. We will attempt to draw conclusions about the overall influence of each state on the music industry. 
 
-In making this dataset, we hope to see the overall degree of connection from the music industry to each state.
+#### Overall Goals
 
-**Note:** An artist who grew up in a state will **not** contribute to that state's connection. We are not attempting to determine the *connection*, *collaboration*, and *influence* of a state's culture; we are not determining the relative *artistic gifts* of their population.
+On a graph of collaboration between musical artists, we will be able to find the degree of separation between a given artist and each state. 
+
+We will be able to make a dataset containing these degrees of separation. In making this dataset, we hope to be able to draw conclusions about the overall degree of connection from the music industry to each state.
+
+#### Separation 
+
+*The "degree of separation" between a given artist and a given state is the length of the shortest path on the collaboration graph between the given artist and some artist whose hometown is from the given state.*
+
+As a direct consequence of this definition, an artist has a separation of 0 degrees from the state of their hometown. Since they grew up immersed in that state's culture, we make the assumption that they can be considered representative of that state's culture. However, an artist who grew up in a state will **not** contribute to that state's connection (i.e. separations of 0 degrees will not be considered "close"; they will be discarded entirely from consideration). We are attempting to determine the *connection*, *collaboration*, and *influence* of a state's culture; we are not determining the relative *artistic gifts* of their population.
+
+#### Hometown 
+
+Our definition of "hometown" is taken directly from MusicBrainz's `artist.begin_area` column. As per the MusicBrainz documentation: "*The artist area, as the name suggests, indicates the area with which an artist is primarily identified with*"[^6]. As we are looking for the place that the artist was born and grew up (or, for groups, the place where it gained its group identity and was formed), we will primarily use the `begin_area` column rather than the `area` column.
+
+Although this limits our dataset's size significantly, we expect that it will still be large enough to accomplish our goals. If not, we recognize that we may need to seek other data, and are prepared to use MusicBrainz's linked-data relationship records (which link to Wikidata, the Library of Congress, Discogs, etc.) to do so.
 
 ### Itemized Goals
 
 - A method to tell the "degree of separation" between a given artist and a given state
+- A dataset of "degrees of separation" between each artist and each state
 - Analysis of the graph formed by the degrees of separation and connection
   - Specifically, shortest-path; graph connectedness; etc
   - However, we will attempt to implement multiple algorithms in order to gain an accurate view of the music industry's overall connection
-- An interactive visualizer for our results
+- Some visual presentation of our results
+	- Format may vary depending on our results & subsequent conclusions 
 
 ### Stretch Goals 
 
@@ -45,19 +61,21 @@ In making this dataset, we hope to see the overall degree of connection from the
 
 ### Midterm 
 
-- **Graph representation of collaborations**
+- Gathering of all required data
+	- Artist hometowns & associated states 
+	- Artist collaboration edges 
 - Begin work on analysis of graph representation 
-- Begin work on interactive visualizer of experimental subset of the data 
 
 ### Final 
 
 - Full analysis results
-- Finished interactive visualizer 
+- Finished visual presentation 
 
 ## Potential Challenges 
 
-- Dataset size: we may anticipate difficulties in loading and transforming the complete dataset, and then visualizing our data interactively 
-- Runtime: the complete creation of our graph database may take a prohibitive amount of time 
+- Dataset size: we may anticipate difficulties in loading and transforming the complete dataset
+- Runtime: the complete creation of our graph may take a prohibitive amount of time 
+- Data cleanliness: since we are using crowd-sourced data, we may encounter issues with the cleanliness thereof 
 
 ## Related Work 
 
@@ -107,7 +125,6 @@ This contains an investigation into collaboration networks in two specific genre
 [^1]: https://www.arts.gov/impact/research/arts-data-profile-series/adp-28
 [^2]: https://www.newyorker.com/books/page-turner/can-you-write-a-novel-as-a-group
 [^3]: https://psycnet.apa.org/record/2010-17989-002
-[^4]: Wikidata - SPARQL query, "number of notable musicians per U.S. state"; see [`musicians.spaqrl`](./musicians.sparql) for source
-[^5]: https://web.archive.org/web/20080513152119/http://members.socket.net/~dcowsley/jazzstyles.htm
-[^6]: https://sites.google.com/oakland.edu/grossman/home/the-erdoes-number-project
-[^7]: https://archive.org/details/sixdegreesofkevi00fass
+[^4]: https://sites.google.com/oakland.edu/grossman/home/the-erdoes-number-project
+[^5]: https://archive.org/details/sixdegreesofkevi00fass
+[^6]: https://musicbrainz.org/doc/Artist
