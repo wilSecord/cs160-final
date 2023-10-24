@@ -4,9 +4,18 @@ SELECT
     min(l_artist_recording1.entity1) AS collaboration,
     l_artist_recording2.entity0 AS artist2
 FROM
-    (SELECT id FROM artist WHERE area=222) AS artist
+    (
+        SELECT
+            id
+        FROM
+            artist
+        WHERE
+            area = 222
+    ) AS artist
     JOIN l_artist_recording AS l_artist_recording1 ON l_artist_recording1.entity0 = artist.id
     JOIN l_artist_recording AS l_artist_recording2 ON l_artist_recording2.entity1 = l_artist_recording1.entity1
+WHERE
+    l_artist_recording1.entity0 != l_artist_recording2.entity0
 GROUP BY
     artist1,
     artist2;
