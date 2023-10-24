@@ -1,20 +1,18 @@
-SELECT DISTINCT
+SELECT
     l_artist_recording1.entity0 AS artist1,
     'recording' AS collaboration_type,
     min(l_artist_recording1.entity1) AS collaboration,
     l_artist_recording2.entity0 AS artist2
 FROM
-    artist
+    (SELECT id FROM artist WHERE area=222) AS artist
     JOIN l_artist_recording AS l_artist_recording1 ON l_artist_recording1.entity0 = artist.id
     JOIN l_artist_recording AS l_artist_recording2 ON l_artist_recording2.entity1 = l_artist_recording1.entity1
 GROUP BY
     artist1,
-    artist2
-UNION
-SELECT DISTINCT
+    artist2;
+
+SELECT
     l_artist_work1.entity0 AS artist1,
-    'work' AS collaboration_type,
-    min(l_artist_work1.entity1) AS collaboration,
     l_artist_work2.entity0 AS artist2
 FROM
     artist
