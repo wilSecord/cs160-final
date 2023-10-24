@@ -1,4 +1,4 @@
-\o collaborations_recording.csv
+\o data/collaborations_recording.csv
 SELECT
     l_artist_recording1.entity0 AS artist1,
     'rc' AS collaboration_type,
@@ -13,7 +13,7 @@ GROUP BY
     artist1,
     artist2;
 
-\o collaborations_work.csv
+\o data/collaborations_work.csv
 SELECT
     l_artist_work1.entity0 AS artist1,
     'wk' AS collaboration_type,
