@@ -1,7 +1,5 @@
-\o artist_states.csv
-\set ECHO_HIDDEN 'off'
-\set ECHO 'none'
-\set ON_ERROR_STOP 1
+\o
+
 BEGIN;
 
 CREATE OR REPLACE FUNCTION find_us_state_of_area (area_id int) 
@@ -31,8 +29,11 @@ BEGIN
 end;
 $$ LANGUAGE plpgsql;
 
+COMMIT;
+
+\pset format csv 
+\o data/artist_states.csv
+
 SELECT id, state_id FROM artist,
     LATERAL (SELECT find_us_state_of_area(artist.begin_area) AS state_id) l
     WHERE l.state_id <> 0;
-
-COMMIT;

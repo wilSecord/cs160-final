@@ -1,3 +1,6 @@
+\o
+\pset format csv 
+
 \o data/collaborations_recording.csv
 SELECT
     l_artist_recording1.entity0 AS artist1,
