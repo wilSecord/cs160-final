@@ -37,7 +37,7 @@ After forming our dataset, we will analyze it. This step in the pipeline is comp
 
 #### Output and Visualization
 
-When we have analytical results, we will visualize them. We have evaluated several graph visualization tools: graphvis, mermaid, and the idea of developing a custom visualizer. We have chosen to use graphvis because it will take less time to develop, and is superior to mermaid in ability to handle larger graphs. We are still open to the idea of making a custom visualizer, but this is a stretch goal.
+When we have analytical results, we will visualize them. We have evaluated several graph visualization tools: Graphvis, Mermaid, and the idea of developing a custom visualizer. We have chosen to use Graphvis as an explorative visualizer because, unlike a custom visualizer, it won't block our analysis; and it is superior to Mermaid in ability to handle larger graphs. We are still planning to make a custom visualizer, but we are prepared to use Graphvis in the event that we are unable to.
 
 ### Component Interaction
 
@@ -61,9 +61,9 @@ We don't forsee that we will have to change our milestones. We are confident in 
 
 ### Implementation Decisions 
 
-We *are* implementing various graph algorithms, but we haven't finished anything concretely yet. Even so, our main architectural choice is a commitment to the use of Python where possible because all of our group members are aware of how to use it. We are planning to use the NetworkX library for management of our graph, as it is well-known in the industry and came well-recommended by our professor. We will reimplement algorithms that we use in order to , with an eye towards NetworkX's implementation for correctness purposes.
+We *are* implementing various graph algorithms, but we haven't finished anything concretely yet. Even so, our main architectural choice is a commitment to the use of Python where possible because all of our group members are aware of how to use it. We are planning to use the NetworkX library for management of our graph, as it is well-known in the industry and came well-recommended by our professor. We will reimplement algorithms that we use in order to gain understanding of them, with an eye towards NetworkX's implementation for correctness purposes.
 
-We also considered using an external server, such as Blazegraph, or implementing our own graph type. The former was discarded because although an external server provides speed in the SPARQL query language, it limits our flexibility and ease of implementation for external algorithms. The latter was discarded after careful consideration because we want to be easily able to monitor the 
+We also considered using an external server, such as Blazegraph, or implementing our own graph type. The former was discarded because although an external server provides speed in the SPARQL query language, it limits our flexibility and ease of implementation for external algorithms. The latter was discarded after careful consideration because we want to be able to use a wider ecosystem of functionality without developing it ourselves.
 
 We are concerned about the speed ramifications of Python, but we are prepared to develop in Python and transition to Java if required. We have made the decision to defer consideration of Java graph libraries until this becomes an issue.
 
