@@ -7,11 +7,41 @@ Repository: https://github.com/wilSecord/cs160-final
 ---
 # Midterm Report: U.S. States & Musical Artists
 
-In this project, we will investigate the level of connection between musical artists and every U.S. state.
+In this project, we are investigating the level of connection between musical artists and every U.S. state.
 
 ## System Design
 
-**TODO!**
+### Overview 
+
+Our system is a collection of scripts written in various languages to download data about music and then perform analysis on it. Each script forms a subcomponent of our complete system. 
+
+We chose to split our system up this way so that we don't have to run the entire pipeline in a single step: although it's easy to string together commands in shell scripts to *compose* components, it's more difficult to break down a pipeline that wasn't written with this in mind.
+
+### Architecture 
+
+#### Database 
+
+We use a clone of the MusicBrainz database made from a 2023-09-xx dump as our source data. This uses a Postgres database: for the setup, we followed MusicBrainz's recommendations. This is the only component that does not communicate with the others through flat file input/outputs.
+
+#### Data Subsetting
+
+We don't need all of the MusicBrainz data, and we want to perform local analysis on the data we *do* need. PGSQL scripts download the subsets of data we need and write it to CSV files, which we then check in to revision control.
+
+#### Combination & Filtering
+
+Doing some calculations on our data, even ones before our basic analysis, is prohibitively expensive on the server because we would need to compare between different data subsets that we download seperately. As such, we are doing some cross-dataset comparison after downloading in order to make sure that we only keep relevant records. We will remove records that are related to international artists, because our scope is limited to America.
+
+#### Analysis 
+
+After forming our dataset, we will analyze it. This step in the pipeline is composed of several discrete scripts; each script may be run at the operator's discretion. We hope that this flexible structure will yield fruitful explorative results that we can use to build a concrete pipeline for output.
+
+#### Output and Visualization
+
+When we have analytical results, we will visualize them. We have evaluated several graph visualization tools: graphvis, mermaid, and the idea of developing a custom visualizer. We have chosen to use graphvis because it will take less time to develop, and is superior to mermaid in ability to handle larger graphs. We are still open to the idea of making a custom visualizer, but this is a stretch goal.
+
+### Component Interaction
+
+Our system can be partitioned along the border of human interaction. Each component, when ran by an operator, writes its output to disk so that later on, a subsequent component may take the data as input. We chose to do this because it facillitates intuitive caching by checking the output files into source control and because it gives us flexibility to combine different languages (e.g. PGSQL and Python). We considered using JSON files, but ultimately decided not to because of the size of our dataset: at some steps, Python would choke on large JSONs.
 
 ## Milestone Progress 
 
