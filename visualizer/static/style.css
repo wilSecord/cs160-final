@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    background-color: #000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.interactive, .interactive > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: #b5cfd8;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    pointer-events: none;
+}
+
+#query {
+    background: #0000;
+    padding: 1rem;
+    font-size: 1.7rem;
+    border-radius: 0.75rem;
+    border: 3px solid #C6DEE7;
+    color: #C6DEE7;
+}
+
+#results {
+    position: absolute;
+}
+
+#data-display {
+    width: 100vw;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    font-size: 1.5rem;
+}
+
+#data-display > div {
+    height: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+}
+
+#data-display > div > span {
+    font-size: 1rem;
+}

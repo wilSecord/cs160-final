@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Musical Artist Visualizer</title>
+  <link rel="stylesheet" href="https://unpkg.com/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.css">
+  <link rel="stylesheet" href="/style.css">
+
+
+
+  <script src="https://unpkg.com/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+
+  <script type="importmap">
+            {
+              "imports": {
+                "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/",
+                "artist_points": "/3d/artist_points.js"
+              }
+            }
+          </script>
+  <script src="/3d/3d.js" type="module" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+</head>
+
+<body>
+  <div class="interactive">
+    <div id="three"></div>
+    <div id="ui">
+      <div class="searchbox">
+        <input id="query" autocomplete="off">
+        <div id="results">
+
+        </div>
+
+      </div>
+      <div id="data-display"></div>
+    </div>
+  </div>
+</body>
+
+</html>
