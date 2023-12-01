@@ -1,0 +1,39 @@
+[package]
+name = "explorations"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/common/lib.rs"
+
+[[bin]]
+name = "connected_components"
+path = "src/connected_components.rs"
+
+[[bin]]
+name = "all_states_are_connected"
+path = "src/all_states_are_connected.rs"
+
+[[bin]]
+name = "shortest_paths"
+path = "src/shortest_paths.rs"
+
+[[bin]]
+name = "min_tree_from_each_state"
+path = "src/min_tree_from_each_state.rs"
+
+
+[[bin]]
+name = "make_artist_points"
+path = "src/make_artist_points.rs"
+
+
+[[bin]]
+name = "get_num_connected_and_degree"
+path = "src/get_num_connected_and_degree.rs"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+petgraph = "0.6.4"

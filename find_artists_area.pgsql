@@ -34,6 +34,13 @@ COMMIT;
 \pset format csv 
 \o data/artist_states.csv
 
-SELECT id, state_id FROM artist,
+SELECT artist_id, state_id, area.gid AS area_gid FROM 
+(SELECT 
+    artist.id as artist_id, 
+    state_id,
+    artist.begin_area
+FROM artist,
     LATERAL (SELECT find_us_state_of_area(artist.begin_area) AS state_id) l
-    WHERE l.state_id <> 0;
+WHERE 
+    l.state_id <> 0) AS f 
+JOIN area ON area.id = f.begin_area;
