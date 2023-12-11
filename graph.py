@@ -39,12 +39,18 @@ def make_collab_graph():
     n_collab = open('data/collaborations_names.csv')
     n_rel_reader = csv.reader(n_rels)
     n_col_reader = csv.reader(n_collab)
+    n_states = csv.reader(open('data/state_names.csv'))
+    for item in n_states:
+        g.add_node(item[1])
 
     for item in n_rel_reader:
-        g.add_node(item[0], state=item[1])
+        g.add_node(item[0])
+        g.add_edge(item[0], item[1])
     
     for item in n_col_reader:
-        g.add_edge(item[0], item[1], weight=1)
+        g.add_edge(item[0], item[1])
     print('done')
     pickle.dump(g, open('graph', 'wb'))
-make_collab_graph()
+
+
+# make_collab_graph()
