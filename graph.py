@@ -31,6 +31,27 @@ def make_a_s_csv():
             out.writerow([artists[item[0]], states[item[1]]])
         i += 1
 
+def bfs(source: str, graph: nx.Graph):
+    frontier = [(0, source)]
+    paths = { source: (0, None) } 
+
+    while len(frontier) > 0:
+        (node_cost, node) = frontier.pop()
+
+        if paths[node][0] < node_cost:
+            continue
+
+        for neighbor in graph.neighbors(node):
+            neighbor_path = paths.get(neighbor, None)
+            neighbor_cost = node_cost + 1
+
+            if neighbor_path == None or neighbor_cost < neighbor_path[0]:
+                if neighbor_path == None:
+                    frontier.push((neighbor_cost, neighbor))
+
+                paths[neighbor] = (neighbor_cost, node)
+
+    return paths 
 
 def make_collab_graph():
     g = nx.Graph()
