@@ -2,6 +2,7 @@ import csv
 import networkx as nx
 import matplotlib.pyplot as plt
 import pickle
+import os
 
 # this feels really innefficient but idk how to make it better
 def make_a_s_csv():
@@ -47,11 +48,50 @@ def bfs(source: str, graph: nx.Graph):
 
             if neighbor_path == None or neighbor_cost < neighbor_path[0]:
                 if neighbor_path == None:
-                    frontier.push((neighbor_cost, neighbor))
+                    frontier.append((neighbor_cost, neighbor))
 
                 paths[neighbor] = (neighbor_cost, node)
 
     return paths 
+
+def bfs_each_state(g):
+    states = [x[1] for x in csv.reader(open('data/state_names.csv'))]
+
+    bfs_trees = dict()
+
+    for state in states:
+        bfs_trees[state] = bfs(state, g)
+    return bfs_trees
+
+def print_bfs_tree_stats(bfs_trees: dict[str, dict[str, tuple[int, str]]]):
+
+    with open("./results/num_connected.txt", 'w') as file:
+
+        print("state,artist_count,avg_degree,max_degree,weighted_linear_degree_sum,weighted_quad_degree_sum",file=file)
+
+        for state, tree in bfs_trees.items():
+            lengths = [x for x in map(lambda x: x[0], tree.values())]
+
+            avg = 0
+            count = 0
+            max_val = 0
+            weighted_linear = 0.0
+            weighted_sum_quad = 0.0
+
+            for i,x in enumerate(lengths):
+                if x == 0: continue
+
+                count += 1
+                avg = (avg * i + x) / (i + 1)
+                max_val = max(max_val, x);
+
+                weighted_linear += 1.0 / (x)
+                weighted_sum_quad += 1.0 / (x ** 2)
+
+            if(count): weighted_linear /= count
+            if(count): weighted_sum_quad /= count
+
+            print(f"{state},{count},{avg},{max_val},{weighted_linear},{weighted_sum_quad}", file=file)
 
 def make_collab_graph():
     g = nx.Graph()
@@ -72,6 +112,11 @@ def make_collab_graph():
         g.add_edge(item[0], item[1])
     print('done')
     pickle.dump(g, open('graph', 'wb'))
+    return g
 
+if not os.path.isfile('data/artist_states_names.csv'): make_a_s_csv()
 
-# make_collab_graph()
+graph = make_collab_graph()
+state_bfs_trees = bfs_each_state(graph)
+
+print_bfs_tree_stats(state_bfs_trees)

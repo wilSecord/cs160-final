@@ -7,14 +7,6 @@ edition = "2021"
 path = "src/common/lib.rs"
 
 [[bin]]
-name = "connected_components"
-path = "src/connected_components.rs"
-
-[[bin]]
-name = "all_states_are_connected"
-path = "src/all_states_are_connected.rs"
-
-[[bin]]
 name = "shortest_paths"
 path = "src/shortest_paths.rs"
 

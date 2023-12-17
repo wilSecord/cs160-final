@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX_FILESIZE_BYTES=40M
+: "${MAX_FILESIZE_BYTES:=40M}"
 
 mkdir data || (rm -rf data && mkdir data)
 
@@ -17,6 +17,10 @@ function psql_exec() {
 psql_exec find_artists_area.pgsql
 
 psql_exec find_collaborations.pgsql
+
+psql_exec get_state_namems.pgsql
+
+psql_exec artist_id_rel.pgsql
 
 # split large csv files into tinier ones in order to not fall afoul of the github size limit
 find data -iname "*.csv" -size +"$MAX_FILESIZE_BYTES" \

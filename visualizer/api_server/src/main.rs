@@ -2,18 +2,42 @@ use std::{collections::HashMap, sync::Arc};
 
 mod prefix_trie;
 
-use explorations::UnitedStatesState;
+use explorations::{UnitedStatesState, shortest_path};
+use prefix_trie::PrefixTrie;
 use warp::{reply::json, Filter};
 
 #[tokio::main]
 async fn main() {
-    // let shortest_paths =
-    //     explorations::ad_hoc_shortest_path_file_format::read("../../results/state_trees.txt")
-    //         .unwrap()
-    //         .into_iter()
-    //         .collect::<Vec<_>>();
-    let shortest_paths = Vec::<(UnitedStatesState, HashMap<u32, u32>)>::new();
+    let shortest_paths = explorations::ad_hoc_shortest_path_file_format::read("../../results/state_trees.txt").unwrap();
+
+        for _ in shortest_paths.take(10) {
+
+        }
+
+        return ();
+
+        let shortest_paths: Vec<_> = explorations::ad_hoc_shortest_path_file_format::read("../../results/state_trees.txt").unwrap().collect();
+
     let names_o = Arc::new(explorations::artist_names("../../data/artist_names.csv").unwrap());
+    let name_search_tree = Arc::new(
+        names_o
+            .clone()
+            .iter()
+            .map(|(id, name)| {
+                (
+                    name.chars().filter_map(|mut x| {
+                        if x.is_ascii_alphanumeric() {
+                            x.make_ascii_lowercase();
+                            Some(x)
+                        } else {
+                            None
+                        }
+                    }),
+                    id.to_owned(),
+                )
+            })
+            .collect::<PrefixTrie<_, _>>(),
+    );
 
     let cors = warp::cors().allow_any_origin();
 
@@ -24,17 +48,10 @@ async fn main() {
             let name = urlencoding::decode(&name).expect("UTF-8");
             eprintln!("{name}");
             json(
-                &names
-                    .clone()
-                    .iter()
-                    .filter_map(|(k, v)| {
-                        if starts_ignore_case_ignore_whitespace(v, &name) {
-                            Some((k, v))
-                        } else {
-                            None
-                        }
-                    })
+                &name_search_tree
+                    .prefix_values(name.chars())
                     .take(10)
+                    .map(|id| (id, names[id].clone()))
                     .collect::<Vec<_>>(),
             )
         })
@@ -48,19 +65,15 @@ async fn main() {
 
     let names = names_o.clone();
 
+    eprintln!("there are {} states", shortest_paths.len());
+
     let get_artist_paths = warp::path!("api" / "artists" / u32 / "paths")
         .map(move |id| {
             json(
                 &shortest_paths
                     .iter()
                     .map(|(k, v)| {
-                        let mut node: u32 = id;
-                        let mut path = Vec::new();
-                        for _ in 0..256 {
-                            path.push(names.get(&(node as usize)).cloned().unwrap_or_default());
-                            let Some(next) = v.get(&node) else { break };
-                            node = *next;
-                        }
+                        let path = v.path_as_vec(&id);
                         (k.name().split(':').nth(2).unwrap(), path)
                     })
                     .collect::<HashMap<_, _>>(),
@@ -68,22 +81,11 @@ async fn main() {
         })
         .with(cors);
 
-    warp::serve(artist_search.or(get_artist_paths).or(get_name))
+    eprintln!("Serving!");
+
+    let static_files = warp::fs::dir("../../static");
+
+    warp::serve(artist_search.or(get_artist_paths).or(get_name).or(static_files))
         .run(([127, 0, 0, 1], 3020))
         .await;
-}
-
-fn starts_ignore_case_ignore_whitespace(string: &str, prefix: &str) -> bool {
-    let mut pchrs = prefix.chars();
-    for (ch, pch) in string.chars().zip(&mut pchrs) {
-        if !pch.eq_ignore_ascii_case(&ch) {
-            return false;
-        }
-    }
-    //if we've exhausted the prefix, true!
-    if pchrs.next().is_none() {
-        return true;
-    } else {
-        return false;
-    }
 }

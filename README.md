@@ -57,6 +57,14 @@ For static image visualizations of this aggregated analysis, please see the [Res
 
 Our interactive visualization runs using the [Petgraph](https://github.com/petgraph/petgraph) Rust library. It incorporates *all* artists: this is because artists can be selected arbitrarily at runtime, rather than showing aggregated answers. Although this may seem less applicable to our specific research question, user research shows that, in an interactive format, users prefer this. We have elected to instead have the visualization display a warning when a non-American artist is selected.
 
+To create the visualization's cached [shortest-path trees](#connection-metrics), run the `min_tree_from_each_state` program in the `explorations` Rust project:
+
+```console 
+user@computer /path/to/repo/cs160-final/explorations $ cargo run --bin=min_tree_from_each_state
+```
+
+After this completes, the `visualizer/api_server` Rust project can be run to serve the visualization 
+
 ## Objectives & Non-Objectives
 
 This project is an attempt to:
@@ -73,9 +81,35 @@ This project does **not** attempt to:
 - Analyze over **time**, **album series number**, **degree of collaboration**, or any other axis.
 - Analyze geography outside of the United States
 
-## 
+## Rationale of Algorithms, Lanugages, and Tools Used
+
+This project utilizes breadth-first search in order to determine the degree of separation of a musician/band to a specific state. This degree allows us to analyze and understand the connections between artists and how other artists influence each other. Breadth-first search is a widely used algorithm to determine the shortest path between two nodes in a graph. BFS, as opposed to alternate shortest path algorithms, utilizes a simple implementation.
+
+We used BFS for our shortest-path algorithm because, at this stage of the project, we are **not** attempting to weight edges. With unweighted edges, the well-known Dijkstra's algorithm is equivalent to a simple breadth-first search, but with a greater $\Theta(n)$ for its primitives' operations (i.e. a simple queue is more efficient than a priority queue).
+
+The project uses two different languages for different purposes: Rust and Python. We started with writing our visualization code in Python, but quickly ran into issues with the amount of time that it took to run. We tried to optimize this performance, but struggled: we are unsure of the reason behind this, but *hesitantly* attribute it to Python's emphasis on readability over performance. As such, we chose to keep our more focused dataset in Python, but wrote Rust analysis for our visualizations. Because our Rust code analyzed a bigger dataset, we ended up having to write more scaffolding code for pre-processing 'explorations'. The more we could cut down the dataset, the better. As such, our Rust code has a greater size than our Python code. A future improvement to the project would be to attempt a pure Python codebase.
+
+For our graph representations, we used the respective language ecosystems' foremost graph libraries. We used some algorithms from these for preliminary analysis (e.g. connected component analysis), but ensured understanding of the algorithms by re-implementation. A Python improvement could be to use a lower-level language implementation with Python bindings: since NetworkX is written in pure Python, not C/C++ (as many other high-performance Python libraries are), it is more vulnerable to this issue.
+
+### Connection Metrics
+
+In static aggregate analysis, all analysis is ran **per-state**: we are analyzing states. The following descriptions may be difficult to follow unless this is kept in mind.
+
+When performing analysis, a tree is created; the root of this tree is the state itself, and each other node is an artist. Artists with degree `1` from the root (i.e. artists who are from the state) are excluded from the aggregate. This exclusion is to offset the effects of a large amount of artists hailing from a state: obviously, there *will* be network effects, but we do not want to assume that this is a low-impact effect.
+
+Analysis is performed on the **degree** (of connection, from the tree's root) of each artist, aggregated over the state. We analyze the average and maximum for each state, as well as two weighted averages: linearly weighted and quadratically 
 
 ## Results
 
+
+
 ## Project Retrospective
 
+In our [midterm report](https://github.com/wilSecord/cs160-final/tree/midterm-report) and [inital report](https://github.com/wilSecord/cs160-final/tree/78f0d9aad897440c5330bc14cc4e8165f69dc3ca), we set and reinforced the objectives of:
+
+- Full analysis results
+- Finished visual presentation
+
+We accomplished these goals, but they definitely could have been accomplished in a better way. While all goals were complete technically, the project could have benefited from more exploration and analytics.
+
+It would have helped our completion to be more smooth if, rather than our unstructured, informal project management strategy, we had elected a 'group leader' at the start. A formal leader, manager, or lead would have had the explicit responsibility to manage and keep track of timeline and prevent us from falling into scope creep; this would have been extremely helpful for our organization while maintaining a democratic structure, as the manager doesn't have more 'power' in actuality: just the official responsibility which connotates the ability to set schedules and such.

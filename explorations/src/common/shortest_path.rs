@@ -1,4 +1,4 @@
-use petgraph::{prelude::NodeIndex, stable_graph::IndexType, Graph, Directed};
+use petgraph::{prelude::NodeIndex, stable_graph::IndexType, Directed, Graph};
 use std::{
     cmp,
     collections::{BTreeMap, BinaryHeap, HashMap},
@@ -34,16 +34,14 @@ pub fn dijkstras_algorithm_shortest_path_matrix<N, E, Ix: IndexType>(
 pub fn dijkstras_algorithm_shortest_path_to_all<N, E, Ix: IndexType>(
     graph: &Graph<N, E, Directed, Ix>,
     start: NodeIndex<Ix>,
-) -> HashMap<NodeIndex<Ix>, NodeIndex<Ix>>{
+) -> NodePathSystem {
     let mut frontier = BinaryHeap::new();
-    let mut paths: Vec<Option<NodePath<NodeIndex<Ix>>>> = vec![None; graph.node_count()];
-    paths.fill_with(|| None);
+
+    //initialize the paths with the start's path
+    let mut paths = NodePathSystem::new_with_capacity_and_root(graph.node_count(), start);
 
     //Use Reverse to make the priority queue a min-heap instead of a max-heap
     frontier.push(cmp::Reverse((0, start)));
-
-    //initialize the paths with the start's path
-    paths[start.index()] = Some(NodePath::new(start));
 
     loop {
         let Some(cmp::Reverse((cost, node))) = frontier.pop() else {
@@ -51,33 +49,41 @@ pub fn dijkstras_algorithm_shortest_path_to_all<N, E, Ix: IndexType>(
             break;
         };
 
+        //we can unwrap because we only reach this point if we got a node from the frontier,
+        //and a node only goes into the frontier if it had a reachable path.
+        let node_path = paths.get_unwrap(&node).clone();
+
         //if we've already found some other, better path to this node, don't bother exploring neighbors
-        if paths[node.index()].as_ref().unwrap().cost < cost {
+        if node_path.cost < cost {
             continue;
         }
 
         for neighbor in graph.neighbors(node) {
             let arc_length = 1;
 
-            let previously_known_cost = paths[neighbor.index()].as_ref().map(|x| x.cost).unwrap_or(usize::MAX);
-            let path_to_neighbor_through_node =
-                paths[node.index()].as_ref().unwrap().with_added(neighbor, arc_length);
+            let previously_known_cost = paths
+                .get(&neighbor)
+                .as_ref()
+                .map(|x| x.cost)
+                .unwrap_or(usize::MAX);
+            let path_to_neighbor_through_node = node_path.with_added(neighbor.index(), arc_length);
 
             let new_cost = path_to_neighbor_through_node.cost;
 
             if new_cost < previously_known_cost {
-                frontier.push(cmp::Reverse((new_cost, neighbor)));
+                //if we haven't explored this before, then put it into the frontier
+                //if we explored it already, then we can skip re-exploring all of its
+                //children by not putting it into the frontier.
+                if !paths.contains_key(&neighbor) {
+                    frontier.push(cmp::Reverse((new_cost, neighbor)));
+                }
 
-                paths[neighbor.index()] = Some(path_to_neighbor_through_node);
+                paths.insert(neighbor, path_to_neighbor_through_node);
             }
         }
     }
 
-    return paths
-        .into_iter()
-        .enumerate()
-        .filter_map(|(k, v)| Some((NodeIndex::<_>::new(k), NodeIndex::new(v?.prev?.head.index()))))
-        .collect();
+    return paths;
 }
 
 fn dijkstras_algorithm_shortest_path_to_multiple<N, E, Ix: IndexType>(
@@ -86,13 +92,13 @@ fn dijkstras_algorithm_shortest_path_to_multiple<N, E, Ix: IndexType>(
     goals: &[NodeIndex<Ix>],
 ) -> BTreeMap<NodeIndex<Ix>, Vec<NodeIndex<Ix>>> {
     let mut frontier = BinaryHeap::new();
-    let mut paths = BTreeMap::<(NodeIndex<Ix>, NodeIndex<Ix>), NodePath<NodeIndex<Ix>>>::new();
+
+    //initialize the paths with the start as a root
+    let mut paths =
+        NodePathSystem::new_with_capacity_and_root(graph.node_count(), start);
 
     //Use Reverse to make the priority queue a min-heap instead of a max-heap
     frontier.push(cmp::Reverse((0, start)));
-
-    //initialize the paths with the start's path
-    paths.insert((start, start), NodePath::new(start));
 
     let mut results = BTreeMap::new();
 
@@ -103,14 +109,13 @@ fn dijkstras_algorithm_shortest_path_to_multiple<N, E, Ix: IndexType>(
         };
 
         //if we've already found some other, better path to this node, don't bother exploring neighbors
-        if paths[&(start, node)].cost < cost {
+        if paths.get_unwrap(&node).cost < cost {
             continue;
         }
 
         //if this is a goal, put its path (the shortest) into the results map
         if goals.contains(&node) {
-            println!("Found path from {:?} to {:?}", start, node);
-            results.insert(node, paths[&(start, node)].clone().into());
+            results.insert(node, paths.path_as_vec(&node));
             //...and check if we've found all the results (and can early-return)
             if results.len() == goals.len() {
                 return results;
@@ -120,88 +125,178 @@ fn dijkstras_algorithm_shortest_path_to_multiple<N, E, Ix: IndexType>(
         for neighbor in graph.neighbors(node) {
             let arc_length = 1;
 
-            let previously_known_cost = paths
-                .get(&(start, neighbor))
-                .map(|x| x.cost)
-                .unwrap_or(usize::MAX);
-            let path_to_neighbor_through_node = paths
-                .get(&(start, node))
-                .unwrap()
-                .with_added(neighbor, arc_length);
+            let previously_known_cost = paths.get(&neighbor).map(|x| x.cost).unwrap_or(usize::MAX);
+            let path_to_neighbor_through_node =
+                paths.get(&node).unwrap().with_added(neighbor.index(), graph.node_weight(neighbor), arc_length);
 
             let new_cost = path_to_neighbor_through_node.cost;
 
             if new_cost < previously_known_cost {
                 frontier.push(cmp::Reverse((new_cost, neighbor)));
 
-                paths.insert((start, neighbor), path_to_neighbor_through_node);
+                paths.insert(neighbor, path_to_neighbor_through_node);
             }
         }
     }
 }
 
 #[derive(Clone)]
-pub struct NodePath<N: Clone> {
+struct NodePath {
+    self_id: usize,
     cost: usize,
-    prev: Option<Rc<NodePath<N>>>,
-    head: N,
+    to: Option<usize>,
     size: usize,
 }
 
-impl<Ix: IndexType> PartialEq for NodePath<Ix> {
+#[derive(Clone)]
+pub struct NodePathSystem(Vec<Option<NodePath>>);
+
+impl NodePathSystem {
+    pub fn new_with_capacity(capacity: usize) -> Self {
+        NodePathSystem(vec![None; capacity])
+    }
+    pub fn new_with_capacity_and_root<N: IndexType>(capacity: usize, key: N, key_id: usize) -> Self {
+        let mut inner = vec![None; capacity];
+
+        inner[key.index()] = Some(NodePath {
+            self_id: key_id,
+            cost: 0,
+            size: 1,
+            to: None,
+        });
+
+        NodePathSystem(inner)
+    }
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+    pub fn insert_link(&mut self, from_index: usize, from: usize, to: usize) {
+        let inner = &mut self.0;
+        inner[from_index] = Some(NodePath {
+            self_id: from,
+            cost: 0,
+            to: if to == from { None } else { Some(to) },
+            size: 1,
+        });
+    }
+    fn insert<N: IndexType>(&mut self, key: N, value: NodePath) {
+        self.0[key.index()] = Some(value);
+    }
+    fn get<N: IndexType>(&self, key: &N) -> Option<&NodePath> {
+        self.0.get(key.index())?.as_ref()
+    }
+    fn get_unwrap<N: IndexType>(&self, key: &N) -> &NodePath {
+        self.0.get(key.index()).unwrap().as_ref().unwrap()
+    }
+
+    pub fn path_as_vec<N: IndexType>(&self, node: &N) -> Vec<N> {
+        let mut result =
+            Vec::with_capacity(self.get(node).as_ref().map(|x| x.size).unwrap_or_default());
+
+        let mut node = node.index();
+
+        let vals = &self.0;
+
+        loop {
+            result.push(N::new(node));
+
+            node = match vals[node] {
+                Some(NodePath {
+                    to: Some(ref n), ..
+                }) => {
+                    if n == &node.index() {
+                        break;
+                    } else {
+                        *n
+                    }
+                }
+                _ => break,
+            }
+        }
+
+        result
+    }
+
+    fn contains_key<N: IndexType>(&self, key: &N) -> bool {
+        let key = key.index();
+
+        key < self.0.len() && self.0[key].is_some()
+    }
+
+    fn into_iter<N: IndexType>(self) -> impl Iterator<Item = (N, usize)> {
+        self.0
+            .into_iter()
+            .flatten()
+            .enumerate()
+            .filter_map(|(k, v)| Some((N::new(k), v.to?)))
+    }
+
+    pub fn iter<'a, N: IndexType>(&'a self) -> impl Iterator<Item = (N, &'a usize)> {
+        self.0
+            .iter()
+            .flatten()
+            .enumerate()
+            .filter_map(|(k, v)| match v.to {
+                Some(ref v) => Some((N::new(k), v)),
+                _ => None,
+            })
+    }
+
+    pub fn path_length_calc<N: IndexType>(&self, node: &N) -> usize {
+        let mut node = node.index();
+        let mut result = 0;
+
+        loop {
+            result += 1;
+
+            node = match self.0[node] {
+                Some(NodePath {
+                    to: Some(ref n), ..
+                }) => {
+                    let n = n.index();
+                    if n == node {
+                        break;
+                    }
+                    n
+                }
+                _ => break,
+            }
+        }
+
+        result
+    }
+}
+
+impl PartialEq for NodePath {
     fn eq(&self, other: &Self) -> bool {
         self.cost == other.cost
     }
 }
 
-impl<Ix: IndexType> PartialOrd for NodePath<Ix> {
+impl PartialOrd for NodePath {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.cost.partial_cmp(&other.cost)
     }
 }
 
-impl<Ix: IndexType> Eq for NodePath<Ix> {}
+impl Eq for NodePath {}
 
-impl<Ix: IndexType> Ord for NodePath<Ix> {
+impl Ord for NodePath {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.partial_cmp(other).unwrap_or(std::cmp::Ordering::Equal)
     }
 }
 
-impl<N: Clone> NodePath<N> {
-    pub fn new(head: N) -> Self {
+impl NodePath {
+    pub fn with_added(&self, head: usize, head_id: usize, length: usize) -> Self {
         NodePath {
-            prev: None,
-            head,
-            cost: 0,
-            size: 1,
-        }
-    }
-    pub fn with_added(&self, head: N, length: usize) -> Self {
-        NodePath {
-            prev: Some(Rc::new(self.clone())),
-            head,
+            self_id: head_id,
+            to: Some(head),
             cost: self.cost + length,
             size: self.size + 1,
         }
     }
     pub fn size(&self) -> usize {
         self.size
-    }
-}
-
-impl<N: Clone> From<NodePath<N>> for Vec<N> {
-    fn from(value: NodePath<N>) -> Self {
-        let mut vec = Vec::with_capacity(value.size);
-
-        let mut value = &value;
-        loop {
-            vec.insert(0, value.head.clone());
-
-            let Some(ref v) = value.prev else {
-                return vec;
-            };
-            value = Rc::as_ref(v);
-        }
     }
 }

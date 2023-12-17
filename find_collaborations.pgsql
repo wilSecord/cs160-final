@@ -30,3 +30,15 @@ WHERE
 GROUP BY
     artist1,
     artist2;
+
+\o data/artist_artist_relations.csv
+SELECT
+    entity0 AS artist1,
+    'aa' AS collaboration_type,
+    min(id) AS collaboration,
+    entity1 AS artist2
+FROM
+    l_artist_artist
+GROUP BY
+    artist1,
+    artist2;

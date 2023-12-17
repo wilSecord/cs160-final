@@ -7,85 +7,87 @@ use std::{
     path::Path,
 };
 
-use crate::{UnitedStatesState, shortest_path::NodePath};
+use crate::{shortest_path::NodePathSystem, UnitedStatesState};
 
 pub const FORMAT_NOTE: &str = "This file's format is improvised, but self-documenting. This string MUST be preserved.
 All NUMBERs in this file are LITTLE-ENDIAN 32-bit unsigned integers.
 This file is composed of zero or more STATE SECTIONS, each of which start with a STATE's name (colon-separated alphanumeric terms), 
 followed by a '[' and a NUMBER `count`. The STATE SECTION then holds `count` pairs of NUMBERs; in each pair, the first 
-NUMBER is a 'from' and the second NUMBER is a 'to': following these directional links transitively will eventually lead to a 'to'
-that doesn't have any more links: this is an artist from the STATE. The path formed by these links is the shortest path to *any* 
+NUMBER is a identifier of the current node, and the second NUMBER is a 0-based index link into the current STATE SECTION: 
+following these directional links transitively will eventually lead to a 'to'
+that links to itself: this is an artist from the STATE. The path formed by these links is the shortest path to *any* 
 artist from the STATE. This file is written in binary instead of csv or another format because in plain-text (even compressed!),
 it's much too big to upload to GitHub. The file's content, as described, begins after this double-colon::";
 
-pub fn read_to_nodepaths<P: AsRef<Path>>(
+pub fn read_nodesystem<P: AsRef<Path>>(
     path: P,
-) -> Result<HashMap<UnitedStatesState, HashMap<u32, NodePath<u32>>>, Box<dyn Error>> {
-    let result = read(path)?;
-
-    Ok(result.into_iter().map(|(k,v)| {
-        let mut new_map: HashMap<u32, NodePath<u32>> = HashMap::new();
-        let mut f: VecDeque<_> = v.into_iter().collect();
-
-        while let Some((k,v)) = f.pop_front() {
-            if new_map.contains_key(&v) {
-                new_map.insert(k, new_map.get(&v).unwrap().clone().with_added(k, 1));
-            } else {
-                f.push_back((k,v));
-            }
-        }
-        (k, new_map)
-    }).collect())
+) -> Result<HashMap<UnitedStatesState, NodePathSystem>, Box<dyn Error>> {
+    read_into_collection::<_, _>(path)
 }
 
-pub fn read<P: AsRef<Path>>(
-    path: P,
-) -> Result<HashMap<UnitedStatesState, HashMap<u32, u32>>, Box<dyn Error>> {
-    let mut reader = BufReader::new(File::open(path)?);
+pub struct AdHocShortestPathFileFormatReader {
+    reader: BufReader<File>,
+}
 
-    //read the format note & toss it away
-    reader.seek_relative(FORMAT_NOTE.len() as i64)?;
+impl Iterator for AdHocShortestPathFileFormatReader {
+    type Item = (UnitedStatesState, NodePathSystem);
 
-    let mut result: HashMap<UnitedStatesState, HashMap<u32, u32>> = HashMap::new();
+    fn next(&mut self) -> Option<Self::Item> {
+        let reader = &mut self.reader;
 
-    //read the name
-    loop {
         let mut name_buf = Vec::new();
-        if reader.read_until(b'[', &mut name_buf)? == 0 {
-            break;
+        if reader.read_until(b'[', &mut name_buf).unwrap_or(0) == 0 {
+            return None;
         }
-        let mut state_name = String::from_utf8(name_buf)?;
+        let mut state_name = String::from_utf8(name_buf).unwrap();
 
         //remove the deliminator
         state_name.pop();
 
-        let state = UnitedStatesState::try_from_name(&state_name).ok_or("Not a state")?;
+        let state = UnitedStatesState::try_from_name(&state_name).unwrap();
 
-        let len = read_u32_le(&mut reader)?;
+        let len = read_u32_le(reader).unwrap();
 
-        eprintln!("{state} {len}");
+        let mut pathsystem = NodePathSystem::new_with_capacity((len + 1).try_into().unwrap());
 
-        result.insert(
-            state,
-            (0..len)
-                .filter_map(|_| {
-                    Some((
-                        read_utf8_u32(&mut reader).ok().flatten()?,
-                        read_utf8_u32(&mut reader).ok().flatten()?,
-                    ))
-                })
-                .collect(),
-        );
+        for i in 0..len {
+            pathsystem.insert_link(
+                i,
+                read_u32_le(reader).unwrap().try_into().unwrap(),
+                read_u32_le(reader).unwrap().try_into().unwrap(),
+            );
+        }
+
+        Some((state, pathsystem))
     }
-
-    Ok(result)
 }
 
-fn read_utf8_u32<R: BufRead>(reader: &mut R) -> io::Result<Option<u32>> {
+pub fn read_into_collection<
+    P: AsRef<Path>,
+    I: FromIterator<(UnitedStatesState, NodePathSystem)>,
+>(
+    path: P,
+) -> Result<I, Box<dyn Error>> {
+    read(path).map(|x| x.collect())
+}
+
+pub fn read<
+    P: AsRef<Path>
+>(
+    path: P,
+) -> Result<AdHocShortestPathFileFormatReader, Box<dyn Error>> {
+    let mut reader = BufReader::new(File::open(path)?);
+    //read the format note & toss it away
+    reader.seek_relative(FORMAT_NOTE.len() as i64)?;
+
+    Ok(AdHocShortestPathFileFormatReader { reader })
+}
+
+fn read_utf8_u32<R: BufRead>(reader: &mut R) -> io::Result<u32> {
     let mut v = Vec::new();
     reader.read_until(b',', &mut v)?;
     v.pop();
-    let s = String::from_utf8(v).ok().map(|x| x.parse().ok()).flatten();
+    let s = String::from_utf8(v).unwrap().parse().unwrap();
     Ok(s)
 }
 
