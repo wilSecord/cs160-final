@@ -1,2 +1,0 @@
-## White Paper
-This project utilizes breadth-first search in order to determine the degree of separation of a musician/band to a specific state. This degree allows us to analyze and understand the connections between artists and how other artists influence each other. Breadth-first search is a widely used algorithm to determine the shortest path between two nodes in a graph. BFS, as opposed to alternate shortest path algorithms, utilizes a simple implementation.
