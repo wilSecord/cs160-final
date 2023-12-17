@@ -107,15 +107,15 @@ Analysis is performed on the **degree** (of connection, from the tree's root) of
 
 Below are charts of our aggregated static analysis:
 
-![chart](../img/usmap-avg.png)
+![chart](./img/usmap-avg.png)
 
 This chart shows each state's **average** degree of connection to an artist (lower degree is darker). From this, we can see that although states like California and New York have more artists; Wyoming, Louisiana, and Tennessee have a closer average degree of connection.
 
-![chart](../img/usmap-max.png)
+![chart](./img/usmap-max.png)
 
 This graph shows each state's **maximum** degree of connection to artists (lower degree is darker). Comparing the two, one can see that while Louisiana maintains its position as an outlier, Wyoming and Tennessee have less of a margin: Kansas and Illinois join this second cohort. 
 
-![chart](../img/bars-linear.png)
+![chart](./img/bars-linear.png)
 
 This bar chart shows our linear weighted average aggregate (higher bar is further aggregate degree). We can see that New York, California, Pennsylvania, and Massachusetts are in the highest five -- these states also have many musical artists *native to those states*. Because this metric gives more preference to an immediate fan-out than a wide fan-out (i.e. a large number of artists with a low degree holds more influence than a large amount of artists with a high degree), this makes sense: a large artist population gives a large network, but one that is shallow. States with smaller amounts of artists sit (on average) at the low end of this range -- a closer aggregate degree. 
 
